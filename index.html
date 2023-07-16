@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Complete the Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    
+    table {
+      border-collapse: collapse;
+      margin: 20px auto;
+    }
+    
+    td {
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      border: 1px solid #000;
+      cursor: pointer;
+    }
+    
+    .selected {
+      background-color: blue;
+      color: #fff;
+    }
+    
+    .correct {
+      background-color: green;
+      text-decoration: line-through;
+    }
+    
+    .incorrect {
+      background-color: red;
+    }
+    
+    #guessed-words {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Complete the Game</h1>
+  <h2>If the word is correct, but it did not enter, enter it again</h2>
+  <table id="game-table">
+    <tr>
+      <td onclick="handleClick(this, 0, 0)">l</td>
+      <td onclick="handleClick(this, 0, 1)">o</td>
+      <td onclick="handleClick(this, 0, 2)">u</td>
+      <td onclick="handleClick(this, 0, 3)">p</td>
+      <td onclick="handleClick(this, 0, 4)">d</td>
+      <td onclick="handleClick(this, 0, 5)">o</td>
+      <td onclick="handleClick(this, 0, 6)">r</td>
+    </tr>
+    <tr>
+      <td onclick="handleClick(this, 1, 0)">u</td>
+      <td onclick="handleClick(this, 1, 1)">s</td>
+      <td onclick="handleClick(this, 1, 2)">h</td>
+      <td onclick="handleClick(this, 1, 3)">e</td>
+      <td onclick="handleClick(this, 1, 4)">o</td>
+      <td onclick="handleClick(this, 1, 5)">c</td>
+      <td onclick="handleClick(this, 1, 6)">m</td>
+    </tr>
+    <tr>
+      <td onclick="handleClick(this, 2, 0)">k</td>
+      <td onclick="handleClick(this, 2, 1)">a</td>
+      <td onclick="handleClick(this, 2, 2)">s</td>
+      <td onclick="handleClick(this, 2, 3)">n</td>
+      <td onclick="handleClick(this, 2, 4)">f</td>
+      <td onclick="handleClick(this, 2, 5)">f</td>
+      <td onclick="handleClick(this, 2, 6)">m</td>
+    </tr>
+    <tr>
+      <td onclick="handleClick(this, 3, 0)">m</td>
+      <td onclick="handleClick(this, 3, 1)">y</td>
+      <td onclick="handleClick(this, 3, 2)">g</td>
+      <td onclick="handleClick(this, 3, 3)">k</td>
+      <td onclick="handleClick(this, 3, 4)">k</td>
+      <td onclick="handleClick(this, 3, 5)">e</td>
+      <td onclick="handleClick(this, 3, 6)">e</td>
+    </tr>
+    <tr>
+      <td onclick="handleClick(this, 4, 0)">a</td>
+      <td onclick="handleClick(this, 4, 1)">l</td>
+      <td onclick="handleClick(this, 4, 2)">l</td>
+      <td onclick="handleClick(this, 4, 3)">o</td>
+      <td onclick="handleClick(this, 4, 4)">i</td>
+      <td onclick="handleClick(this, 4, 5)">e</td>
+      <td onclick="handleClick(this, 4, 6)">m</td>
+    </tr>
+    <tr>
+      <td onclick="handleClick(this, 5, 0)">l</td>
+      <td onclick="handleClick(this, 5, 1)">o</td>
+      <td onclick="handleClick(this, 5, 2)">o</td>
+      <td onclick="handleClick(this, 5, 3)">t</td>
+      <td onclick="handleClick(this, 5, 4)">t</td>
+      <td onclick="handleClick(this, 5, 5)">s</td>
+      <td onclick="handleClick(this, 5, 6)">e</td>
+    </tr>
+    <tr>
+      <td onclick="handleClick(this, 6, 0)">a</td>
+      <td onclick="handleClick(this, 6, 1)">p</td>
+      <td onclick="handleClick(this, 6, 2)">a</td>
+      <td onclick="handleClick(this, 6, 3)">b</td>
+      <td onclick="handleClick(this, 6, 4)">c</td>
+      <td onclick="handleClick(this, 6, 5)">h</td>
+      <td onclick="handleClick(this, 6, 6)">p</td>
+    </tr>
+    <tr>
+      <td onclick="handleClick(this, 7, 0)">y</td>
+      <td onclick="handleClick(this, 7, 1)">s</td>
+      <td onclick="handleClick(this, 7, 2)">i</td>
+      <td onclick="handleClick(this, 7, 3)">o</td>
+      <td onclick="handleClick(this, 7, 4)">n</td>
+      <td onclick="handleClick(this, 7, 5)">e</td>
+      <td onclick="handleClick(this, 7, 6)">a</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td onclick="handleClick(this, 8, 1)">s</td>
+      <td onclick="handleClick(this, 8, 2)">b</td>
+      <td onclick="handleClick(this, 8, 3)">o</td>
+      <td onclick="handleClick(this, 8, 4)">s</td>
+      <td onclick="handleClick(this, 8, 5)">t</td>
+      <td onclick="handleClick(this, 8, 6)">n</td>
+    </tr>
+  </table>
+  <div id="guessed-words"></div>
+  <script>
+    const words = [
+      'lukashenko',
+      'soup',
+      'malaysia',
+      'dorm',
+      'coffee',
+      'memes',
+      'kitchen',
+      'polyglot',
+      'boobs',
+      'pants'
+    ];
+    
+    let selectedCells = [];
+    let currentWordIndex = 0;
+    let guessedWords = [];
+    
+    function handleClick(cell, row, col) {
+      if (selectedCells.length === 0 || isValidNextCell(row, col)) {
+        cell.classList.add('selected');
+        selectedCells.push({ cell, row, col });
+        checkWord();
+      } else {
+        resetSelection();
+      }
+    }
+    
+    function isValidNextCell(row, col) {
+      const lastCell = selectedCells[selectedCells.length - 1];
+      const { row: lastRow, col: lastCol } = lastCell;
+      const rowDiff = Math.abs(row - lastRow);
+      const colDiff = Math.abs(col - lastCol);
+      return (rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1);
+    }
+    
+    function checkWord() {
+      const selectedWord = selectedCells.map(cell => cell.cell.innerText).join('');
+      if (words.includes(selectedWord)) {
+        console.log('Word found:', selectedWord);
+        selectedCells.forEach(cell => {
+          cell.cell.style.backgroundColor = 'green';
+        });
+        guessedWords.push(selectedWord);
+        updateGuessedWords();
+        if (guessedWords.length === words.length) {
+          showCongratulationsAlert();
+        }
+      }
+    }
+    
+    function resetSelection() {
+      selectedCells.forEach(cell => {
+        cell.cell.classList.remove('selected');
+      });
+      selectedCells = [];
+    }
+    
+    function updateGuessedWords() {
+      const guessedWordsContainer = document.getElementById('guessed-words');
+      guessedWordsContainer.innerHTML = `<strong>Guessed Words:</strong> ${guessedWords.join(', ')}`;
+    }
+    
+    function showCongratulationsAlert() {
+      alert('Congratulations! Press ENTER');
+      window.location.href = 'https://disk.yandex.ru/d/tnbYjn-lwFXDxQ';
+    }
+  </script>
+</body>
+</html>
